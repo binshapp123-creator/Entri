@@ -23,21 +23,23 @@ void timer0_1sec_delay()
 	1. One timer tick = 1 / 16,000,000
 	= 62.5 ns
 
-	256 ticks = 16 ms
+	one overflow(256 ticks) = 16 microseconds = 0.000016 seconds
 	
 	ie,one over flow occures in every 16 ms
 	
-	2.How many overflow required to make one second.
-	1 sec = 1000 ms = 1000000/16 = 62500
+	2.Total overflow for one second.
+	1 sec = 1000 ms = 1/0.000016 = 62500
 	
 	*/
-	for(uint16_t i=0; i<62,500; i++)
+	for(uint16_t i=0; i<62500; i++)
 	{
 		/*Wait until the overflow flag is set*/
 		while(!(TIFR0 &(1 << TOV0)))
 		/* Clear over flow flag in TOV0 by writing logic 1 to it. */
 		TIFR0 |= (1 << TOV0);
 	}
+	/* Turn off the timer clock when done */
+	TCCR0B &= ~((1 << CS00));
 }
 	int main(void)
 {
